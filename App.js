@@ -1,20 +1,52 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { useFonts } from "expo-font";
+import Home from "./screens/Home";
+import { COLORS } from "./constants/theme";
+import Search from "./screens/Search";
+import Detail from "./screens/Detail";
+import { StatusBar } from "expo-status-bar";
+import Category from "./screens/Category";
+import Welcome from "./screens/Welcome";
 
-export default function App() {
+const Stack = createNativeStackNavigator();
+
+const App = () => {
+  const [loaded] = useFonts({
+    InterBold: require("./assets/fonts/Inter-Bold.ttf"),
+    InterSemiBold: require("./assets/fonts/Inter-SemiBold.ttf"),
+    InterMedium: require("./assets/fonts/Inter-Medium.ttf"),
+    InterRegular: require("./assets/fonts/Inter-Regular.ttf"),
+    InterLight: require("./assets/fonts/Inter-Light.ttf"),
+  });
+
+  if (!loaded) return null;
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <SafeAreaProvider>
+      <StatusBar />
+      <NavigationContainer
+        theme={{
+          colors: {
+            background: COLORS.white,
+          },
+        }}
+      >
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="Welcome" component={Welcome} />
+          <Stack.Screen name="Home" component={Home} />
+          <Stack.Screen
+            name="Search"
+            component={Search}
+            options={{ animation: "fade_from_bottom", animationDuration: 100 }}
+          />
+          <Stack.Screen name="Detail" component={Detail} />
+          <Stack.Screen name="Category" component={Category} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </SafeAreaProvider>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
